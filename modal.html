@@ -1,0 +1,29 @@
+{% block script %}
+{{ super() }}
+<script>
+  $(document).ready(function() {
+
+    // add step button opens modal containing step form loaded via ajax
+    $('#addStepButton').click(function() {
+      var url = "{{ url_for('main.create_step', receipe_id=receipe.id) }}";
+      $.get(url, function(data) {
+        $('#stepDialog .modal-content').html(data);
+        $('#stepDialog').modal();
+
+        $('#submit').click(function(event) {
+          event.preventDefault();
+          $.post(url, data=$('#stepForm').serialize(), function(data) {
+            if (data.status == 'ok') {
+              $('#stepDialog').modal('hide');
+              location.reload();
+            }
+            else {
+              $('#stepDialog .modal-content').html(data);
+            }
+          });
+        })
+      });
+    });
+...
+</script>
+{% endblock %}
